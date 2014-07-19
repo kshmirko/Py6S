@@ -249,7 +249,7 @@ class SixS(object):
         #
         ground_reflectance_lines = self._create_ground_reflectance_lines()
 
-        if (isinstance(ground_reflectance_lines, basestring)):
+        if (isinstance(ground_reflectance_lines, str)):
             str_ground_refl = str(ground_reflectance_lines.replace("WV_REPLACE", "%f %f" % (self.min_wv, self.max_wv)))
         else:
             str_ground_refl = str(ground_reflectance_lines[0].replace("WV_REPLACE", "%f %f" % (self.min_wv, self.max_wv)))
@@ -276,12 +276,12 @@ class SixS(object):
             # No filename given, so write to temporary file
             tmp_file = tempfile.NamedTemporaryFile(prefix="tmp_Py6S_input_", delete=False)
 
-            tmp_file.file.write(input_file)
+            tmp_file.file.write(input_file.encode('utf-8'))
             name = tmp_file.name
             tmp_file.close()
         else:
             f = open(filename, 'w')
-            f.write(input_file)
+            f.write(input_file.encode('utf-8'))
             name = filename
             f.close()
 
@@ -301,7 +301,7 @@ class SixS(object):
         # Run the process and get the stdout from it
         process = subprocess.Popen("%s < %s" % (self.sixs_path, tmp_file_name), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         outputs = process.communicate()
-        self.outputs = Outputs(outputs[0], outputs[1])
+        self.outputs = Outputs(outputs[0].decode('UTF-8'), outputs[1].decode('UTF-8'))
 
         # Remove the temporary file
         os.remove(tmp_file_name)
@@ -313,39 +313,39 @@ class SixS(object):
         import platform
         import sys
 
-        print "Py6S Debugging Report"
-        print "---------------------"
-        print "Run on %s" % (str(datetime.datetime.now()))
-        print "Platform: %s" % (platform.platform())
-        print "Python version: %s" % (sys.version.split('\n')[0])
-        print "Py6S version: %s" % (self.__version__)
-        print "---------------------"
+        print("Py6S Debugging Report")
+        print("---------------------")
+        print("Run on %s" % (str(datetime.datetime.now())))
+        print("Platform: %s" % (platform.platform()))
+        print("Python version: %s" % (sys.version.split('\n')[0]))
+        print("Py6S version: %s" % (self.__version__))
+        print("---------------------")
         self.test()
-        print "---------------------"
+        print("---------------------")
 
         fname = self.write_input_file()
         with open(fname) as f:
             contents = f.readlines()
 
-        print "".join(contents)
+        print("".join(contents))
 
     @classmethod
     def test(self):
         """Runs a simple test to ensure that 6S and Py6S are installed correctly."""
         test = SixS()
-        print "6S wrapper script by Robin Wilson"
+        print("6S wrapper script by Robin Wilson")
         sixs_path = test._find_path()
         if sixs_path is None:
-            print "Error: cannot find the sixs executable in $PATH or current directory."
+            print("Error: cannot find the sixs executable in $PATH or current directory.")
         else:
-            print "Using 6S located at %s" % sixs_path
-            print "Running 6S using a set of test parameters"
+            print("Using 6S located at %s" % sixs_path)
+            print("Running 6S using a set of test parameters")
             test.run()
-            print "The results are:"
-            print "Expected result: %f" % 619.158
-            print "Actual result: %f" % test.outputs.diffuse_solar_irradiance
+            print("The results are:")
+            print("Expected result: %f" % 619.158)
+            print("Actual result: %f" % test.outputs.diffuse_solar_irradiance)
             if (test.outputs.diffuse_solar_irradiance - 619.158 < 0.01):
-                print "#### Results agree, Py6S is working correctly"
+                print("#### Results agree, Py6S is working correctly")
                 return 0
             else:
                 return 1

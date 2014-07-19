@@ -17,7 +17,7 @@
 
 #from sixs_exceptions import *
 import collections
-import StringIO
+import io
 import numpy as np
 
 
@@ -388,7 +388,7 @@ WV_REPLACE
 
     @classmethod
     def _ArrayToString(cls, array):
-        text = StringIO.StringIO()
+        text = io.StringIO()
         np.savetxt(text, array, fmt="%.5f", delimiter=' ')
         s = text.getvalue()
         text.close()

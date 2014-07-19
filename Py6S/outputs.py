@@ -59,7 +59,7 @@ class Outputs(object):
 
         if len(stderr) > 0:
             # Something on standard error - so there's been an error
-            print stderr
+            print(stderr)
             raise OutputParsingError("6S returned an error (shown above) - check for invalid parameter inputs")
 
         self.fulltext = stdout
@@ -87,10 +87,10 @@ class Outputs(object):
 
     def __dir__(self):
         # Returns list of the attributes that I want to tab-complete on that aren't actually attributes, for IPython
-        trans_keys = ["transmittance_" + key for key in self.trans.keys()]
-        rat_keys = self.rat.keys()
+        trans_keys = ["transmittance_" + key for key in list(self.trans.keys())]
+        rat_keys = list(self.rat.keys())
 
-        all_keys = self.values.keys() + trans_keys + rat_keys
+        all_keys = list(self.values.keys()) + trans_keys + rat_keys
         return sorted(all_keys)
 
     def extract_results(self):
@@ -165,7 +165,7 @@ class Outputs(object):
         # Process most variables in the output
         for index in range(len(lines)):
             current_line = lines[index]
-            for label, details in extractors.iteritems():
+            for label, details in extractors.items():
                     # If the label we're searching for is in the current line
                 if label in current_line:
                     # See if the data is in the current line (as specified above)
@@ -209,7 +209,7 @@ class Outputs(object):
 
         for index in range(len(lines)):
             current_line = lines[index]
-            for search, name in grid_extractors.iteritems():
+            for search, name in grid_extractors.items():
                 # If the label we're searching for is in the current line
                 if search in current_line:
                     items = current_line.split()
@@ -251,7 +251,7 @@ class Outputs(object):
 
         for index in range(len(lines)):
             current_line = lines[index]
-            for search, name in bottom_grid_extractors.iteritems():
+            for search, name in bottom_grid_extractors.items():
                 # If the label we're searching for is in the current line
                 if search in current_line:
                     items = current_line.rsplit(None, 3)
