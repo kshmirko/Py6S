@@ -66,9 +66,9 @@ class Geometry:
                 raise ImportError("To set the geometry from a time and location you must have the PySolar module installed.\nTo install this, run 'pip install pysolar' at the command line.")
 
             dt = dateutil.parser.parse(datetimestring, dayfirst=True)
-            self.solar_z = 90.0 - Pysolar.GetAltitude(lat, int, dt)
+            self.solar_z = 90.0 - Pysolar.GetAltitude(lat, long, dt)
 
-            az = Pysolar.GetAzimuth(lat, int, dt)
+            az = Pysolar.GetAzimuth(lat, long, dt)
 
             if az < 0:
                 self.solar_a = abs(az) + 180
